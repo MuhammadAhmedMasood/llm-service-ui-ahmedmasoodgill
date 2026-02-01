@@ -58,66 +58,99 @@ try{
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-xl p-6 space-y-6">
-        <h1 className="text-2xl font-semibold">
-          Enterprise LLM Service
-        </h1>
-        <p className="text-gray-600">
-          Production-grade LLM API playground
-        </p>
-
-        <textarea
-          className="w-full h-40 p-3 border rounded-md"
-          placeholder="Enter your prompt..."
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-        />
-
-        <div className="flex gap-4">
-          <select
-            className="border p-2 rounded-md"
-            value={task}
-            onChange={(e) => setTask(e.target.value)}
-          >    
-            <option value="generate">Generate</option>
-            <option value="summarise">Summarise</option>
-            <option value="classify">Classify</option>
-          </select>
-
-          <select
-            className="border p-2 rounded-md"
-            value={mode}
-            onChange={(e) => setMode(e.target.value)}
-          >
-            <option value="probabilistic">Probabilistic</option>
-            <option value="deterministic">Deterministic</option>
-          </select>
-
-          <button
-            onClick={handleSubmit}
-            disabled={loading}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
-          >
-            {loading ? "Generating..." : "Generate"}
-          </button>
+    <main className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center px-4">
+      <div className="w-full max-w-3xl">
+        <div className = "text-center mb-8">
+          <h1 className="text-3xl font-semibold tracking-tight text-gray-900">
+            Enterprise LLM Service
+          </h1>
+          <p className="mt-1 text-xs text-gray-500">
+            ⚙️ Production-ready LLM API • ⚡ Fast • 📊 Observable
+          </p>
         </div>
 
-        {output && (
-          <div className="border rounded-md p-4 bg-gray-50">
-            <h2 className="font-semibold mb-2">Output</h2>
-            <pre className="whitespace-pre-wrap">{output}</pre>
-          </div>
-        )}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8">
 
-        {metadata && (
-          <div className="border rounded-md p-4 text-sm bg-gray-50">
-            <h2 className="font-semibold mb-2">Metadata</h2>
-            <pre>{JSON.stringify(metadata, null, 2)}</pre>
+
+          <textarea
+            className="w-full min-h-[120px] rounded-md border border-gray-300 p-3 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+            placeholder="Enter your text here..."
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+          />
+
+          <div className="flex gap-4">
+            <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Task
+                </label>
+                <div className="flex gap-2">
+                  {["generate", "summarise", "classify"].map((t) => (
+                    <button
+                      key={t}
+                      type="button"
+                      onClick={() => setTask(t)}
+                      className={`px-3 py-1.5 rounded-md text-sm border ${
+                        task === t
+                          ? "bg-blue-600 text-white border-blue-600"
+                          : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                      }`}
+                    >
+                      {t.charAt(0).toUpperCase() + t.slice(1)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Mode
+              </label>
+              <div className="flex gap-2">
+                {["deterministic", "probabilistic"].map((m) => (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => setMode(m)}
+                    className={`px-3 py-1.5 rounded-md text-sm border ${
+                      mode === m
+                        ? "bg-gray-900 text-white border-gray-900"
+                        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                    }`}
+                  >
+                    {m.charAt(0).toUpperCase() + m.slice(1)}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <button
+              onClick={handleSubmit}
+              disabled={loading}
+              className="mt-4 w-full sm:w-auto bg-blue-600 text-white px-6 py-2.5 rounded-md text-sm font-medium hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? "Processing..." : "Run"}
+            </button>
           </div>
-        )}
+
+          {output && (
+            <div className="mt-6 rounded-lg border border-gray-200 bg-gray-50 p-4">
+              <h3 className="text-sm font-medium text-gray-700 mb-2">Output</h3>
+              <pre className="whitespace-pre-wrap text-sm text-gray-900">{output}</pre>
+            </div>
+          )}
+
+          {metadata && (
+            <div className="mt-4 text-xs text-gray-500 space-y-1">
+              <div>Model: {metadata.model}</div>
+              <div>Tokens used: {metadata.tokens_used}</div>
+              <div>Latency: {metadata.latency_ms} ms</div>
+              <div>Estimated cost: ${metadata.estimated_cost_usd}</div>
+            </div>
+          )}
+        </div>  
       </div>
     </main>
   );
-}
 
